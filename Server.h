@@ -13,7 +13,11 @@ typedef struct _Server
     int bindFlag;
     int listenFlag;
     struct sockaddr_in server;
+
+    int connecting;
 } Server;
+
+int connecting;
 
 void setIpAndPort(Server *server, int ip_family, uint16_t port);
 void BindAndListen(Server *server, int max);

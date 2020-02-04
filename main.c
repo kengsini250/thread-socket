@@ -13,4 +13,6 @@ int main()
 #endif
     getData(server);
     close(server->server_socketfd);
+    printf("finish!\n");
+    return 0;
 }

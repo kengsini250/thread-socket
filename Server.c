@@ -1,8 +1,10 @@
 #include "Server.h"
-#define DEBUG
+// #define DEBUG
 
 void setIpAndPort(Server *server, int ip_family, uint16_t port)
 {
+    server->connecting = 0;
+
     server->server_socketfd = socket(ip_family, SOCK_STREAM, 0);
     if (-1 == server->server_socketfd)
     {
@@ -38,18 +40,16 @@ void getData(Server *server)
 {
     struct sockaddr_in client;
     memset(&client, 0, sizeof(struct sockaddr_in));
-#ifdef DEBUG
-    int temp;
-#endif
+
     while (1)
     {
         socklen_t size = sizeof(client);
         int client_socketfd = accept(server->server_socketfd,
                                      (struct sockaddr *)&client, &size);
-#ifdef DEBUG
-        temp = client_socketfd;
-        printf("new Client new thread\n");
-#endif
+
+        // server->connecting++;
+        // printf("connecting : %d\n", server->connecting);
+        printf("main thread : %ld\n", pthread_self());
         newThread(client_socketfd);
     }
 }

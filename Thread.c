@@ -1,5 +1,7 @@
 #include "Thread.h"
-#define DEBUG
+// #define DEBUG
+
+int connecting = 0;
 
 void newThread(int client_socketfd)
 {
@@ -15,6 +17,8 @@ void newThread(int client_socketfd)
         perror("create thread wrong");
         exit(1);
     }
+    connecting++;
+    printf("connecting : %d\n", connecting);
     pthread_detach(tid);
 }
 
@@ -32,9 +36,12 @@ void *getDataInThread(void *argc)
         if (0 == n)
         {
             printf("%d disconnect\n", client_socketfd);
-            return;
+            connecting--;
+            printf("connecting : %d\n", connecting);
+            close(client_socketfd);
+            break;
         }
-        printf("%d : %s\n", client_socketfd, buffer);
+        printf("thread : %ld  socket : %d : %s\n", pthread_self(), client_socketfd, buffer);
     }
     pthread_exit(NULL);
 }
